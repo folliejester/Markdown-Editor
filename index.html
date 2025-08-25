@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="./icon.png" type="image/png">
     <title>Markdown Editor</title>
+    <link rel="icon" href="./icon.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@2.3.6/dist/purify.min.js"></script>
@@ -527,7 +527,7 @@
             let initialContent = `# Welcome to the Markdown Editor\n\nThis is a live preview. Start typing on the left to see the result here.\n\n## Features\n\n* **Headers:** Use # for different heading sizes.\n* **Lists:**\n    * Unordered: Use a hyphen (-) or asterisk (*).\n    * Ordered: Use numbers followed by a period.\n    * Checked: Use - [ ] or - [x] to create checkboxes.\n* **Formatting:**\n    * **Bold:** \`**text**\`\n    * *Italic:* \`*text*\`\n    * ~~Strikethrough:~~ \`~~text~~\`\n* **Code Blocks:** Use backticks to highlight inline code \`like this\` or three backticks for a full code block.\n\n\`\`\`javascript\nconst hello = 'world';\nconsole.log(hello);\n\`\`\`\n\n> This is a blockquote, often used for quotes.\n\n### Tables\n\n| Feature | Status |\n|---|---|\n| Sync Scroll | ✅ |\n| Undo/Redo | ✅ |\n\nAnd here's a link to [Google](https://google.com).\n\n![A placeholder image](https://placehold.co/400x200/55a0e3/ffffff?text=Image+Example)\n\nHappy writing!`;
             try {
                 const savedContent = localStorage.getItem('markdownContent');
-                if (savedContent !== null) {
+                if (savedContent !== null && savedContent !== '') {
                     initialContent = savedContent;
                 }
             } catch (e) {
