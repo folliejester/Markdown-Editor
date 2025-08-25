@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./icon.png" type="image/png">
     <title>Markdown Editor</title>
-    <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Marked.js for Markdown parsing. Pinned to a stable version to prevent errors. -->
     <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
-    <!-- DOMPurify for sanitizing the output HTML -->
     <script src="https://cdn.jsdelivr.net/npm/dompurify@2.3.6/dist/purify.min.js"></script>
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" xintegrity="sha512-iecdLp3E7B8fG0J8g9a74R54sT13uL5E+sL6P5eBf6Gz7t5R5yU5O5R5eG5L5sL5g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         body {
@@ -20,68 +17,49 @@
             background-color: #f3f4f6;
             transition: background-color 0.3s ease;
         }
-
         body.dark {
             background-color: #121212;
         }
-
         body.dark .bg-white {
             background-color: #1a1a1a;
         }
-
         body.dark .bg-gray-50 {
             background-color: #121212;
         }
-
         body.dark .bg-gray-100 {
             background-color: #1f1f1f;
         }
-
         body.dark .border-gray-200 {
             border-color: #333333;
         }
-
         body.dark .border-gray-300 {
             border-color: #333333;
         }
-
-        /* General text color for dark mode */
         body.dark .text-gray-800 {
             color: #e2e8f0;
         }
-        
         body.dark .text-gray-700 {
             color: #d1d5db;
         }
-
         body.dark .text-gray-500 {
             color: #a0aec0;
         }
-
-        /* Button styles for dark mode */
         body.dark .bg-gray-200 {
             background-color: #2d2d2d;
         }
-        
         body.dark .hover\\:bg-gray-300:hover {
             background-color: #4a4a4a;
         }
-
-        /* Explicitly set color for button text and icons in dark mode */
         body.dark .custom-button {
             color: #e2e8f0; 
         }
-
-        /* Hide scrollbars for a cleaner look */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
         .no-scrollbar {
-            -ms-overflow-style: none; /* IE and Edge */
-            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
-
-        /* Custom styling for the rendered Markdown */
         .markdown-preview h1, .markdown-preview h2, .markdown-preview h3, .markdown-preview h4, .markdown-preview h5, .markdown-preview h6 {
             font-weight: bold;
             margin-top: 1.5rem;
@@ -95,34 +73,24 @@
         .markdown-preview h5 { font-size: 1.125rem; }
         .markdown-preview h6 { font-size: 1rem; }
         .markdown-preview p { margin-bottom: 1rem; }
-        
-        /* Explicitly set list styles to ensure bullets and numbers show up */
         .markdown-preview ul {
             list-style-type: disc;
             padding-left: 2rem;
             margin-bottom: 1rem;
         }
-
-        /* New CSS for nested unordered lists */
         .markdown-preview ul ul {
-            list-style-type: circle; /* Hollow dot */
+            list-style-type: circle;
         }
-
         .markdown-preview ul ul ul {
-            list-style-type: square; /* Filled square */
+            list-style-type: square;
         }
-
         .markdown-preview ol {
             list-style-type: decimal;
             padding-left: 2rem;
             margin-bottom: 1rem;
         }
-        
-        /* Remove the conflicting margin that was misaligning the list items */
         .markdown-preview li {
-            /* This property has been removed for better alignment. */
         }
-        
         .markdown-preview blockquote {
             border-left: 4px solid #d1d5db;
             padding-left: 1rem;
@@ -130,16 +98,13 @@
             font-style: italic;
             margin-bottom: 1rem;
         }
-
         body.dark .markdown-preview {
             color: #e2e8f0;
         }
-
         body.dark .markdown-preview blockquote {
             border-color: #6b7280;
             color: #a0aec0;
         }
-
         .markdown-preview pre {
             background-color: #f1f1f1;
             padding: 1rem;
@@ -147,21 +112,17 @@
             overflow-x: auto;
             margin-bottom: 1rem;
         }
-
         body.dark .markdown-preview pre {
             background-color: #2d2d2d;
         }
-
         .markdown-preview code {
             background-color: #e5e7eb;
             padding: 0.25rem 0.5rem;
             border-radius: 0.25rem;
         }
-
         body.dark .markdown-preview code {
             background-color: #3d3d3d;
         }
-
         .markdown-preview pre code {
             background-color: transparent;
             padding: 0;
@@ -180,11 +141,9 @@
             background-color: #e5e7eb;
             font-weight: bold;
         }
-
         body.dark .markdown-preview th {
             background-color: #2d2d2d;
         }
-
         .markdown-preview img {
             max-width: 100%;
             height: auto;
@@ -194,14 +153,10 @@
             color: #3b82f6;
             text-decoration: underline;
         }
-        
-        /* New rule to ensure perfect vertical alignment of checkboxes */
         .markdown-preview input[type="checkbox"] {
             vertical-align: middle;
-            transform: translateY(-0.125rem); /* Fine-tune adjustment for perfect center */
+            transform: translateY(-0.125rem);
         }
-
-        /* Preview only mode CSS */
         .preview-only #editor-pane {
             display: none;
         }
@@ -211,20 +166,14 @@
     </style>
 </head>
 <body class="flex flex-col h-screen">
-
-    <!-- Message Box -->
     <div id="message-box" class="message-box"></div>
-
-    <!-- Header & Main Controls with Icons -->
     <header class="flex items-center justify-between p-4 bg-white border-b border-gray-200 shadow-sm flex-wrap space-y-2 sm:space-y-0">
         <h1 class="text-xl font-bold text-gray-800">Markdown Editor</h1>
         <div class="flex items-center space-x-4">
-            <!-- Word Count -->
             <div class="flex items-center text-sm font-medium text-gray-700 space-x-1">
                 <i class="fas fa-file-word"></i>
                 <span id="word-count">0 words</span>
             </div>
-            <!-- Character Count -->
             <div class="flex items-center text-sm font-medium text-gray-700 space-x-1">
                 <i class="fas fa-keyboard"></i>
                 <span id="char-count">0 characters</span>
@@ -257,8 +206,6 @@
             </button>
         </div>
     </header>
-    
-    <!-- Markdown Toolbar with Icons -->
     <div class="p-2 bg-gray-100 border-b border-gray-200">
         <div class="flex flex-wrap space-x-4 w-full">
             <button class="custom-button toolbar-btn" data-markdown-action="heading" title="Heading">
@@ -302,33 +249,23 @@
             </button>
         </div>
     </div>
-
-    <!-- Main Editor & Preview Area -->
     <main id="main-content" class="flex-grow flex flex-col md:flex-row bg-gray-50 overflow-hidden">
-        
-        <!-- Editor Pane -->
         <div id="editor-pane" class="flex-1 flex flex-col p-4 border-r border-gray-200">
             <h2 class="text-lg font-semibold text-gray-700 mb-2">Editor</h2>
             <textarea id="markdown-input" class="flex-1 p-4 text-gray-800 bg-white border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 no-scrollbar"></textarea>
         </div>
-
-        <!-- Preview Pane -->
-        <div id="preview-pane" class="flex-1 flex flex-col p-4 overflow-y-auto no-scrollbar">
+    <div id="preview-pane" class="flex-1 flex flex-col p-4 overflow-y-auto no-scrollbar">
             <h2 class="text-lg font-semibold text-gray-700 mb-2">Preview</h2>
             <div id="markdown-preview" class="markdown-preview flex-1 p-4 bg-white border border-gray-300 rounded-lg overflow-y-auto no-scrollbar">
                 <p class="text-gray-500 text-center italic">Start typing in the editor to see your Markdown rendered here.</p>
             </div>
         </div>
     </main>
-    
     <script>
-        // Set marked.js options for GFM (GitHub Flavored Markdown) and line breaks
         marked.setOptions({
             gfm: true,
             breaks: true,
-            // Custom renderer to add classes for styling
             renderer: {
-                // A complete renderer to prevent 'is not a function' errors
                 space: () => '',
                 hr: () => `<hr>`,
                 html: (html) => html,
@@ -348,19 +285,13 @@
                     const tag = ordered ? 'ol' : 'ul';
                     return `<${tag}>${body}</${tag}>`;
                 },
-                // The listitem renderer is now correctly included again
                 listitem: (text, task, checked) => {
-                    // Check if it's a task list item by checking for the task property
                     if (task) {
-                        // The `marked` parser handles checkbox rendering using the `checkbox` renderer
-                        // We just need to ensure the list item itself is correctly wrapped.
                         const content = text.replace(/<p>|<\/p>/g, '');
-                        // Changed `items-start` to `items-center` for better vertical alignment.
                         return `<li class="flex items-center">${content}</li>`;
                     }
                     return `<li>${text}</li>`;
                 },
-                // The `checkbox` renderer is still used for the checkboxes in task lists.
                 checkbox: (checked) => {
                     return `<input type="checkbox" disabled ${checked ? 'checked' : ''} class="form-checkbox text-blue-600 rounded mr-2" />`;
                 },
@@ -369,8 +300,6 @@
                 tablecell: (content, flags) => `<td>${content}</td>`
             }
         });
-
-        // Get references to DOM elements
         const markdownInput = document.getElementById('markdown-input');
         const markdownPreview = document.getElementById('markdown-preview');
         const toolbarButtons = document.querySelectorAll('.toolbar-btn');
@@ -387,16 +316,9 @@
         // New elements for word and character count
         const wordCountDisplay = document.getElementById('word-count');
         const charCountDisplay = document.getElementById('char-count');
-
-        // State for undo/redo history and sync toggle
         let history = [''];
         let historyIndex = 0;
         let isSyncEnabled = true;
-
-        /**
-         * Shows a temporary message in the message box.
-         * @param {string} message The message to display.
-         */
         const showMessage = (message) => {
             messageBox.textContent = message;
             messageBox.classList.add('show');
@@ -404,71 +326,44 @@
                 messageBox.classList.remove('show');
             }, 2000);
         };
-        
-        /**
-         * Updates the word and character counts.
-         */
         const updateCounts = () => {
             const text = markdownInput.value;
             const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
             const charCount = text.length;
-
             wordCountDisplay.textContent = `${wordCount} word${wordCount === 1 ? '' : 's'}`;
             charCountDisplay.textContent = `${charCount} character${charCount === 1 ? '' : 's'}`;
         };
-
-        /**
-         * Renders the markdown input to the preview pane.
-         */
         const renderMarkdown = () => {
             const markdownText = markdownInput.value;
-            // Parse and sanitize the HTML to prevent XSS attacks
             const rawHtml = marked.parse(markdownText);
             const cleanHtml = DOMPurify.sanitize(rawHtml);
             markdownPreview.innerHTML = cleanHtml;
         };
-
-        /**
-         * Updates the undo/redo button states based on the history index.
-         */
         const updateHistoryButtons = () => {
             undoBtn.disabled = historyIndex === 0;
             redoBtn.disabled = historyIndex === history.length - 1;
         };
-
-        /**
-         * Handles the input event, updating the preview and history.
-         */
         const handleInput = () => {
             renderMarkdown();
             updateCounts();
-
-            // Check if the new value is different from the current history state
-            const currentValue = markdownInput.value;
+          const currentValue = markdownInput.value;
             if (currentValue !== history[historyIndex]) {
-                // Clear any "redo" history
                 history = history.slice(0, historyIndex + 1);
-                // Add the new state
                 history.push(currentValue);
                 historyIndex++;
             }
             updateHistoryButtons();
         };
-
-        // Event Listeners for Core Functionality
         markdownInput.addEventListener('input', handleInput);
-        
         resetBtn.addEventListener('click', () => {
             markdownInput.value = '';
             handleInput();
         });
-
         copyBtn.addEventListener('click', () => {
             markdownInput.select();
             document.execCommand('copy');
             showMessage('Copied to clipboard!');
         });
-
         downloadBtn.addEventListener('click', () => {
             const filename = 'document.md';
             const text = markdownInput.value;
@@ -483,7 +378,6 @@
             URL.revokeObjectURL(url);
             showMessage('Download started!');
         });
-
         undoBtn.addEventListener('click', () => {
             if (historyIndex > 0) {
                 historyIndex--;
@@ -493,7 +387,6 @@
                 updateHistoryButtons();
             }
         });
-
         redoBtn.addEventListener('click', () => {
             if (historyIndex < history.length - 1) {
                 historyIndex++;
@@ -503,14 +396,11 @@
                 updateHistoryButtons();
             }
         });
-
         syncBtn.addEventListener('click', () => {
             isSyncEnabled = !isSyncEnabled;
             syncBtn.title = isSyncEnabled ? 'Sync On' : 'Sync Off';
             showMessage(`Syncing is now ${isSyncEnabled ? 'on' : 'off'}.`);
         });
-
-        // Theme Toggle Functionality
         const isDarkMode = localStorage.getItem('theme') === 'dark';
         const body = document.body;
         const themeIcon = themeBtn.querySelector('i');
@@ -528,15 +418,11 @@
                 themeBtn.title = 'Toggle Dark Mode';
             }
         };
-
         themeBtn.addEventListener('click', () => {
             const newThemeIsDark = !body.classList.contains('dark');
             updateTheme(newThemeIsDark);
             localStorage.setItem('theme', newThemeIsDark ? 'dark' : 'light');
         });
-
-
-        // Preview Toggle Functionality
         previewBtn.addEventListener('click', () => {
             const isPreviewOnly = mainContent.classList.toggle('preview-only');
             const previewIcon = previewBtn.querySelector('i');
@@ -551,34 +437,23 @@
                 previewIcon.classList.add('fa-eye');
             }
         });
-
-
-        // Sync-scroll Logic
         const syncScroll = (source, target) => {
             if (!isSyncEnabled) return;
-
-            // Simple direct sync without complex flags, which can cause lag
             const scrollPercentage = source.scrollTop / (source.scrollHeight - source.clientHeight);
             target.scrollTop = scrollPercentage * (target.scrollHeight - target.clientHeight);
         };
-
         markdownInput.addEventListener('scroll', () => {
             syncScroll(markdownInput, markdownPreview);
-        });
-        
+        });        
         markdownPreview.addEventListener('scroll', () => {
             syncScroll(markdownPreview, markdownInput);
         });
-
-        // Toolbar Functionality
         toolbarButtons.forEach(button => {
             button.addEventListener('click', () => {
-                // The correct way to access a data attribute with a hyphen is using camelCase
                 const action = button.dataset.markdownAction; 
                 const { selectionStart, selectionEnd } = markdownInput;
                 const selectedText = markdownInput.value.substring(selectionStart, selectionEnd);
                 let newText;
-
                 switch (action) {
                     case 'heading':
                         newText = `# ${selectedText || 'Heading'}`;
@@ -630,7 +505,6 @@
                     default:
                         newText = '';
                 }
-
                 if (newText) {
                     markdownInput.setRangeText(newText, selectionStart, selectionEnd, 'end');
                     markdownInput.focus();
@@ -638,10 +512,7 @@
                 }
             });
         });
-        
-        // Initial render on page load
         document.addEventListener('DOMContentLoaded', () => {
-            // Apply theme from localStorage
             if (isDarkMode) {
                 updateTheme(true);
             }
