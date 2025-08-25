@@ -21,7 +21,7 @@ A lightweight browser-based **Markdown editor** with live preview, dark mode, un
 ### Clone the repository
 ```bash
 git clone https://github.com/folliejester/Markdown-Editor.git
-cd markdown-editor
+cd Markdown-Editor
 ```
 
 ### Run locally
